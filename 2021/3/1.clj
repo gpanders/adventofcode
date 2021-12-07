@@ -5,22 +5,13 @@
       \1
       \0)))
 
-(defn bit-array-to-int [array]
-  (-> (reduce str array)
-      (Integer/parseInt 2)))
-
-(defn invert-bit [b]
-  (case b
-    \0 \1
-    \1 \0))
-
 (defn main []
   (let [input (clojure.string/split-lines (slurp "input.txt"))
-        f (partial most-common-bit input)
-        gamma-bits (map f (range (count (first input))))
-        epsilon-bits (map invert-bit gamma-bits)
-        gamma (bit-array-to-int gamma-bits)
-        epsilon (bit-array-to-int epsilon-bits)]
+        bits (->> (range 12)
+                  (map #(most-common-bit input %))
+                  (reduce str))
+        gamma (Integer/parseInt bits 2)
+        epsilon (bit-and-not 2r111111111111 gamma)]
     (println (* gamma epsilon))))
 
 (main)
