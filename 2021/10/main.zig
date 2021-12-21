@@ -52,15 +52,11 @@ fn parseLine(line: []const u8) Result {
 }
 
 pub fn main() !void {
-    var input_file = try std.fs.cwd().openFile("input.txt", .{});
-    defer input_file.close();
-
-    var input_buf = try std.os.mmap(null, try input_file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, input_file.handle, 0);
-    defer std.os.munmap(input_buf);
+    const input = @embedFile("input.txt");
 
     var p1: u32 = 0;
     var scores = try std.BoundedArray(u64, 100).init(0);
-    var lines = std.mem.tokenize(u8, input_buf, "\n");
+    var lines = std.mem.tokenize(u8, input, "\n");
     while (lines.next()) |line| {
         switch (parseLine(line)) {
             .corrupted => |score| p1 += score,

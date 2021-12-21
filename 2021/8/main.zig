@@ -99,11 +99,7 @@ fn solveLine(line: []const u8, num_unique: *usize) !u32 {
 }
 
 pub fn main() !void {
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var input = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(input);
+    const input = @embedFile("input.txt");
 
     var p1: usize = 0;
     var p2: usize = 0;

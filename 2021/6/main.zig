@@ -4,13 +4,9 @@ pub fn main() !void {
     // counts is a mapping from "number of days left to reproduce" to "number of fish"
     var counts = [_]u64{0} ** 9;
 
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
+    const input = @embedFile("input.txt");
 
-    var line = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(line);
-
-    var it = std.mem.tokenize(u8, line, ",\n");
+    var it = std.mem.tokenize(u8, input, ",\n");
     while (it.next()) |num| {
         var n = try std.fmt.parseUnsigned(u4, num, 10);
         counts[n] += 1;

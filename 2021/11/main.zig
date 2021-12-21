@@ -83,16 +83,12 @@ const Map = struct {
 };
 
 pub fn main() !void {
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var buf = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(buf);
+    const input = @embedFile("input.txt");
 
     var map = Map{};
 
     var row: usize = 0;
-    var lines = std.mem.tokenize(u8, buf, "\n");
+    var lines = std.mem.tokenize(u8, input, "\n");
     while (lines.next()) |line| : (row += 1) {
         for (line) |c, col| {
             map.data[row][col] = try std.fmt.parseUnsigned(u4, &[_]u8{c}, 10);

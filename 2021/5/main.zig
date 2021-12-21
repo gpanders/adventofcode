@@ -25,10 +25,7 @@ const Path = struct {
 
     const Self = @This();
 
-    pub fn readFromFile(allocator: std.mem.Allocator, file: std.fs.File) ![]Self {
-        const data = try file.reader().readAllAlloc(allocator, std.math.maxInt(usize));
-        defer allocator.free(data);
-
+    pub fn readFrom(allocator: std.mem.Allocator, data: []const u8) ![]Self {
         var paths = std.ArrayList(Path).init(allocator);
 
         var line_it = std.mem.tokenize(u8, data, "\n");
@@ -101,10 +98,9 @@ pub fn main() !void {
     var map = Map.init(allocator);
     defer map.deinit();
 
-    const input_file = try std.fs.cwd().openFile("input.txt", .{});
-    defer input_file.close();
+    const input = @embedFile("input.txt");
 
-    const paths = try Path.readFromFile(allocator, input_file);
+    const paths = try Path.readFrom(allocator, input);
     defer allocator.free(paths);
 
     for (paths) |path| {

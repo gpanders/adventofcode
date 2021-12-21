@@ -125,11 +125,7 @@ pub fn main() !void {
 
     var allocator = arena.allocator();
 
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var input = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(input);
+    const input = @embedFile("input.txt");
 
     var rules = std.BufMap.init(allocator);
     defer rules.deinit();

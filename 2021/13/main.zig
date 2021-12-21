@@ -34,18 +34,14 @@ pub fn main() !void {
 
     var allocator = arena.allocator();
 
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var buf = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(buf);
+    const input = @embedFile("input.txt");
 
     var folds = try std.BoundedArray(Fold, 12).init(0);
 
     var points = std.AutoArrayHashMap(Point, void).init(allocator);
     defer points.deinit();
 
-    var lines = std.mem.tokenize(u8, buf, "\n");
+    var lines = std.mem.tokenize(u8, input, "\n");
     while (lines.next()) |line| {
         if (line.len == 0) continue;
 

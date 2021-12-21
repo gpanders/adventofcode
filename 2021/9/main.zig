@@ -66,11 +66,7 @@ const Map = struct {
 };
 
 pub fn main() !void {
-    const input_file = try std.fs.cwd().openFile("input.txt", .{});
-    defer input_file.close();
-
-    const input = try std.os.mmap(null, try input_file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, input_file.handle, 0);
-    defer std.os.munmap(input);
+    const input = @embedFile("input.txt");
 
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();

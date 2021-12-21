@@ -45,11 +45,7 @@ fn heuristic(a: Point, b: Point) Cost {
 }
 
 pub fn main() !void {
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var input = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(input);
+    const input = @embedFile("input.txt");
 
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer if (gpa.deinit()) std.debug.print("Memory leak detected\n", .{});
@@ -92,11 +88,11 @@ pub fn main() !void {
     // Part 2
     grid_size *= 5;
 
-    var frontier = std.PriorityQueue(QueueItem, struct {
-        fn compare(a: QueueItem, b: QueueItem) std.math.Order {
+    var frontier = std.PriorityQueue(QueueItem, void, struct {
+        fn compare(_: void, a: QueueItem, b: QueueItem) std.math.Order {
             return std.math.order(a.cost, b.cost);
         }
-    }.compare).init(allocator);
+    }.compare).init(allocator, {});
     defer frontier.deinit();
 
     var came_from = std.AutoHashMap(Point, Point).init(allocator);

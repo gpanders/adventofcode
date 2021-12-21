@@ -124,16 +124,12 @@ pub fn main() !void {
 
     var allocator = arena.allocator();
 
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var buf = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(buf);
+    const input = @embedFile("input.txt");
 
     var cave_map = try CaveMap.init(allocator);
     defer cave_map.deinit();
 
-    var lines = std.mem.tokenize(u8, buf, "\n");
+    var lines = std.mem.tokenize(u8, input, "\n");
     while (lines.next()) |line| {
         try cave_map.parseLine(line);
     }

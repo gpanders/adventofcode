@@ -10,11 +10,7 @@ pub fn costFunc(nums: []u16, guess: i32) u32 {
 }
 
 pub fn main() !void {
-    var file = try std.fs.cwd().openFile("input.txt", .{});
-    defer file.close();
-
-    var input = try std.os.mmap(null, try file.getEndPos(), std.os.PROT.READ, std.os.MAP.SHARED, file.handle, 0);
-    defer std.os.munmap(input);
+    const input = @embedFile("input.txt");
 
     var list = try std.BoundedArray(u16, 1000).init(0);
     var it = std.mem.tokenize(u8, input, ",\n");
