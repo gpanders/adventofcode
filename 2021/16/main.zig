@@ -70,8 +70,8 @@ const Parser = struct {
 
         _ = try std.fmt.hexToBytes(bytes, hex);
 
-        if (builtin.target.cpu.arch.endian() == .Little) {
-            for (std.mem.bytesAsSlice(Window, bytes)) |*b| b.* = @byteSwap(Window, b.*);
+        for (std.mem.bytesAsSlice(Window, bytes)) |*b| {
+            b.* = std.mem.nativeToBig(Window, b.*);
         }
 
         return self.parseBytes(bytes);

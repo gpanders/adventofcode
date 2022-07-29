@@ -17,7 +17,7 @@ const Result = union(enum) {
 };
 
 fn parseLine(line: []const u8) Result {
-    var stack = std.BoundedArray(u8, 200).init(0) catch unreachable;
+    var stack = std.BoundedArray(u8, 200){};
 
     for (line) |c| {
         if (std.mem.indexOfScalar(u8, ")]}>", c)) |_| {

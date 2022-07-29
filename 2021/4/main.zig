@@ -11,7 +11,7 @@ const BingoSquare = struct {
 
     const Self = @This();
 
-    pub fn readFrom(allocator: *std.mem.Allocator, file: std.fs.File, draw_index_map: std.AutoHashMap(u8, usize)) !Self {
+    pub fn readFrom(allocator: std.mem.Allocator, file: std.fs.File, draw_index_map: std.AutoHashMap(u8, usize)) !Self {
         const reader = file.reader();
 
         var self = Self{};
@@ -80,7 +80,7 @@ const BingoSquare = struct {
     }
 };
 
-pub fn readDrawList(allocator: *std.mem.Allocator, in: std.fs.File) ![]u8 {
+pub fn readDrawList(allocator: std.mem.Allocator, in: std.fs.File) ![]u8 {
     var draw_list = std.ArrayList(u8).init(allocator);
 
     var line = try in.reader().readUntilDelimiterAlloc(allocator, '\n', max_bytes);
@@ -98,7 +98,7 @@ pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
 
-    var allocator = &arena.allocator;
+    var allocator = arena.allocator();
 
     const input_file = try std.fs.cwd().openFile("input.txt", .{});
     defer input_file.close();
